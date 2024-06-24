@@ -1,4 +1,4 @@
-module validation
+module github.com/raphael-foliveira/validation-messages
 
 go 1.22.4
 

@@ -2,7 +2,8 @@ package examples
 
 import (
 	"fmt"
-	"validation"
+
+	"github.com/raphael-foliveira/validation-messages"
 )
 
 type User struct {
