@@ -8,13 +8,13 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// getValidationMessage returns the validation message for a field error
+// getValidationMessage returns the validation message for a field error.
 //
-// # If the tag is not found in the map, it returns the default error message
+// If the tag is not found in the map, it returns the default error message.
 //
-// # If the tag is found in the map, it returns the message with the param if it exists
+// If the tag is found in the map, it returns the message with the param if it exists.
 //
-// If the param does not exist, it returns the message without the param
+// If the param does not exist, it returns the message without the param.
 func getValidationMessage(fieldError validator.FieldError) string {
 	tag := fieldError.Tag()
 
@@ -31,14 +31,14 @@ func getValidationMessage(fieldError validator.FieldError) string {
 	return message
 }
 
-// ValidationError is a map of field names to a list of validation error messages
+// ValidationError is a map of field names to a list of validation error messages.
 //
-// The field name is the json tag if it exists, otherwise it is the struct field name
+// The field name is the json tag if it exists, otherwise it is the struct field's name.
 type ValidationError map[string][]string
 
-// Error returns a string representation of the ValidationError
+// Error returns a string representation of the ValidationError.
 //
-// It marshals the map to json and returns the string
+// It marshals the map to json and returns the string.
 func (ve ValidationError) Error() string {
 	errJson, err := json.Marshal(ve)
 	if err != nil {
@@ -47,9 +47,11 @@ func (ve ValidationError) Error() string {
 	return string(errJson)
 }
 
-// Validate validates a struct using the go-playground/validator package
-// It returns a ValidationError if there are any validation ValidationErrors
-// If there are no ValidationErrors, it returns nil
+// Validate validates a struct using the go-playground/validator package.
+//
+// It returns a ValidationError if there are any validation ValidationErrors.
+//
+// If there are no ValidationErrors, it returns nil.
 func Validate(strct interface{}) error {
 	validate := validator.New()
 	err := validate.Struct(strct)
