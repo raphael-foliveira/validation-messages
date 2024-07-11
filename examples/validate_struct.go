@@ -7,6 +7,8 @@ import (
 )
 
 type User struct {
+	// The validate tag is used to define the validation rules for the field.
+	// If a json tag is provided, the field name in the ValidationError will be the json tag.
 	Username string `validate:"required,min=6,max=32" json:"username"`
 	Email    string `validate:"required,email" json:"email"`
 	Password string `validate:"required,min=8,max=32" json:"password"`
@@ -20,5 +22,5 @@ func ValidateStruct() {
 	}
 
 	err := validation.Validate(myStruct)
-	fmt.Println(err)
+	fmt.Println(err) // {"email":["field value must be a valid email"],"password":["minimum field length is 8"],"username":["minimum field length is 6"]}
 }
