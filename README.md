@@ -3,7 +3,7 @@
 ## Installation
 
 ```bash
-go get github.com/raphael-foliveira/validation
+go get github.com/raphael-foliveira/validation-messages
 ```
 
 ## Usage
