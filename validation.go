@@ -9,11 +9,8 @@ import (
 )
 
 // getValidationMessage returns the validation message for a field error.
-//
 // If the tag is not found in the map, it returns the default error message.
-//
 // If the tag is found in the map, it returns the message with the param if it exists.
-//
 // If the param does not exist, it returns the message without the param.
 func getValidationMessage(fieldError validator.FieldError) string {
 	tag := fieldError.Tag()
@@ -32,12 +29,10 @@ func getValidationMessage(fieldError validator.FieldError) string {
 }
 
 // ValidationError is a map of field names to a list of validation error messages.
-//
 // The field name is the json tag if it exists, otherwise it is the struct field's name.
 type ValidationError map[string][]string
 
 // Error returns a string representation of the ValidationError.
-//
 // It marshals the map to json and returns the string.
 func (ve ValidationError) Error() string {
 	errJson, err := json.Marshal(ve)
@@ -48,9 +43,7 @@ func (ve ValidationError) Error() string {
 }
 
 // Validate validates a struct using the go-playground/validator package.
-//
 // It returns a ValidationError if there are any validation ValidationErrors.
-//
 // If there are no ValidationErrors, it returns nil.
 func Validate(strct interface{}) error {
 	validate := validator.New()
