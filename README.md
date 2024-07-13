@@ -13,7 +13,7 @@ type User struct {
  // The validate tag is used to define the
  // validation rules for the field.
  // If a json tag is provided, the field name
- //in the ValidationError will be the json tag.
+ // in the ValidationError will be the json tag.
  Username string `validate:"required,min=6,max=32" json:"username"`
  Email    string `validate:"required,email" json:"email"`
  Password string `validate:"required,min=8,max=32" json:"password"`
@@ -31,4 +31,4 @@ func ValidateStruct() {
 }
 ```
 
-PS: Only structs can be validated.
+Only structs can be validated.
