@@ -28,18 +28,45 @@ func getValidationMessage(fieldError validator.FieldError) string {
 	return message
 }
 
-// ValidationError is a map of field names to a list of validation error messages.
+// ErrorMap is a map of field names to a list of validation error messages.
 // The field name is the json tag if it exists, otherwise it is the struct field's name.
-type ValidationError map[string][]string
+type ErrorMap map[string][]string
 
 // Error returns a string representation of the ValidationError.
 // It marshals the map to json and returns the string.
-func (ve ValidationError) Error() string {
+func (ve ErrorMap) Error() string {
 	errJson, err := json.Marshal(ve)
 	if err != nil {
 		return fmt.Sprintf("error marshalling validation error: %s", err.Error())
 	}
 	return string(errJson)
+}
+
+func buildErrorMap(strct interface{}, validationError validator.ValidationErrors) ErrorMap {
+	errMap := ErrorMap{}
+
+	strctType := reflect.TypeOf(strct).Elem()
+
+	for _, fieldError := range validationError {
+		fieldName := fieldError.Field()
+
+		field, found := strctType.FieldByName(fieldName)
+		if !found {
+			fmt.Printf("field %s not found in struct\n", fieldError.Field())
+			continue
+		}
+
+		jsonName, jsonSet := field.Tag.Lookup("json")
+
+		if jsonSet {
+			fieldName = jsonName
+		}
+
+		validationErrorMessage := getValidationMessage(fieldError)
+		errMap[fieldName] = append(errMap[fieldName], validationErrorMessage)
+	}
+
+	return errMap
 }
 
 // Validate validates a struct using the go-playground/validator package.
@@ -51,33 +78,11 @@ func Validate(strct interface{}) error {
 	if err == nil {
 		return nil
 	}
+
 	validationError, ok := err.(validator.ValidationErrors)
 	if !ok {
 		return err
 	}
 
-	strctType := reflect.TypeOf(strct).Elem()
-
-	validationErrorMap := ValidationError{}
-
-	for _, fieldError := range validationError {
-		field, found := strctType.FieldByName(fieldError.Field())
-		if !found {
-			fmt.Printf("field %s not found in struct\n", fieldError.Field())
-			continue
-		}
-
-		fieldName := fieldError.Field()
-
-		jsonName, fieldSet := field.Tag.Lookup("json")
-
-		if fieldSet {
-			fieldName = jsonName
-		}
-
-		validationErrorMessage := getValidationMessage(fieldError)
-		validationErrorMap[fieldName] = append(validationErrorMap[fieldName], validationErrorMessage)
-	}
-
-	return validationErrorMap
+	return buildErrorMap(strct, validationError)
 }
