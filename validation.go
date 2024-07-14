@@ -32,10 +32,10 @@ func getValidationMessage(fieldError validator.FieldError) string {
 // The field name is the json tag if it exists, otherwise it is the struct field's name.
 type ErrorMap map[string][]string
 
-// Error returns a string representation of the ValidationError.
+// Error returns a string representation of the ErrorMap.
 // It marshals the map to json and returns the string.
-func (ve ErrorMap) Error() string {
-	errJson, err := json.Marshal(ve)
+func (em ErrorMap) Error() string {
+	errJson, err := json.Marshal(em)
 	if err != nil {
 		return fmt.Sprintf("error marshalling validation error: %s", err.Error())
 	}
@@ -70,7 +70,7 @@ func buildErrorMap(strct interface{}, validationError validator.ValidationErrors
 }
 
 // Validate validates a struct using the go-playground/validator package.
-// It returns a ValidationError if there are any validation ValidationErrors.
+// It returns an ErrorMap if there are any validation ValidationErrors.
 // If there are no ValidationErrors, it returns nil.
 func Validate(strct interface{}) error {
 	validate := validator.New()
